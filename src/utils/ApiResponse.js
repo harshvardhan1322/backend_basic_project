@@ -6,7 +6,7 @@ class ApiResponse {
         {
             this.statusCode = statusCode
             this.data = data
-            this.messsage = message
+            this.message = message // correct spelling so the response JSON has a "message" field
             this.success = statusCode < 400
         }
 }

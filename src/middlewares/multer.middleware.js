@@ -6,7 +6,8 @@ const storage = multer.diskStorage({
         cb(null,"./public/temp")
     },
     filename: function(req,file,cb){
-        cb(null,req.fieldname)
+        const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9) // timestamp + random number so every saved file name is unique
+        cb(null, uniqueSuffix + "-" + file.originalname) // save as "<unique>-<original name>" so simultaneous uploads with the same name don't overwrite each other
     }
 })
 

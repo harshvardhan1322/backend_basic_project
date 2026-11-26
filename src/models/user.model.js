@@ -52,10 +52,9 @@ const userSchema = new mongoose.Schema(
 )
 
 userSchema.pre("save",async function(next){
-    if(!this.isModified("password")) return next();//passwrod encryption
+    if(!this.isModified("password")) return;//passwrod encryption
 
     this.password = await bcrypt.hash(this.password, 10)
-    next()
 })
 
 userSchema.methods.isPasswordCorrect = async function(password){
@@ -63,7 +62,7 @@ userSchema.methods.isPasswordCorrect = async function(password){
 }
 
 userSchema.methods.generateAccessToken = function(){
-    return jwt.sign(
+    return jwt.sign(//calls jwt's sign method
     {
         _id: this._id,
         email: this.email,

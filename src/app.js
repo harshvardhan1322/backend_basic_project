@@ -23,4 +23,14 @@ import userRouter from './routes/user.routes.js' //can import user router like t
 //routes declaration
 app.use("/api/v1/users", userRouter)
 
+// global error handler: must come after the routes; catches every thrown/forwarded error
+app.use((err, req, res, next) => {
+    const statusCode = err.statusCode || 500 // use the ApiError status, or 500 for unexpected errors
+    return res.status(statusCode).json({ // send JSON instead of Express's default HTML error page
+        success: false,
+        message: err.message || "Internal Server Error",
+        errors: err.errors || []
+    })
+})
+
 export {app}
