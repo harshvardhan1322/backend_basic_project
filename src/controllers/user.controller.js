@@ -11,7 +11,7 @@ const generateAccessandRefreshTokens = async(userId) => {
         const accessToken = user.generateAccessToken()
         const refreshToken = user.generateRefreshToken()
 
-        user.refreshToken = refreshToken
+        user.refreshToken = refreshToken //refresh token updated in the user document in the database but no need to update the access token as it was deleted earlier
         await user.save({validateBeforeSave: false})
 
         return {accessToken , refreshToken}
@@ -211,13 +211,13 @@ const refreshAccessToken = asyncHandler(async(req,res) => {
             process.env.REFRESH_TOKEN_SECRET
         )
     
-        const user = await User.findById(decodedToken?._id)
+        const user = await User.findById(decodedToken?._id)//as now we can access the payload and ._id in it using findbyid
     
         if(!user){
             throw new ApiError(401, "Invalid refresh token")
         }
     
-        if(incomingRefreshToken !== user?.refreshToken){
+        if(incomingRefreshToken !== user?.refreshToken){//matching whether the incoming token matches the token saved in the database
             throw new ApiError(401, "Refresh token is expired or used")
         }
     
@@ -226,7 +226,7 @@ const refreshAccessToken = asyncHandler(async(req,res) => {
             secure: true
         }
     
-        const {accessToken,newRefreshToken} = await generateAccessandRefreshTokens(user._id)
+        const {accessToken,newRefreshToken} = await generateAccessandRefreshTokens(user._id)//controller already made to generate access token and refresh token
     
         return res
         .status(200)
